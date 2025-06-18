@@ -1,0 +1,15 @@
+_type: "prompt"
+template: |
+  ### Instructions\n\n
+  Given a contexts and an answer, analyze if the statement can be inferred from given contexts.
+  \n \n
+  Follow the instructions below:\n"
+  0. If the statement can not be inferred from any relevant information in the given contexts, say 0.\n
+  1. If the statement can be inferred from relevant information in the given contexts, say 1.\n
+  You must provide the relevance score of 0, or 1, nothing else.\nDo not explain.\n\n
+  ### Answer: {answer}\n\n
+  ### Contexts: {context}\n\n
+  Do not try to explain.\n
+  Analyzing Contexts and statements, the faithfullness score is 
+
+input_variables: ["answer", "context"]

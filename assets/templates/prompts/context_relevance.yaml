@@ -1,0 +1,19 @@
+_type: "prompt"
+template: |
+ ### Instructions\n\n
+  You are a world class expert designed to evaluate the relevance score of a Context
+      in order to answer the Question.\n"
+  Your task is to determine if the Context contains proper information to answer the Question.\n
+  Do not rely on your previous knowledge about the Question.\n
+  Use only what is written in the Context and in the Question.\n
+  Follow the instructions below:\n"
+  0. If the context does not contains any relevant information to answer the question, say 0.\n
+  1. If the context partially contains relevant information to answer the question, say 1.\n
+  2. If the context contains any relevant information to answer the question, say 2.\n
+  You must provide the relevance score of 0, 1, or 2, nothing else.\nDo not explain.\n
+  ### Question: {question}\n\n"
+  ### Context: {context}\n\n"
+  Do not try to explain.\n"
+  Analyzing Context and Question, the Relevance score is 
+
+input_variables: ["question", "context"]
