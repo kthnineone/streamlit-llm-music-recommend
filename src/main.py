@@ -107,7 +107,7 @@ st.session_state["name_generator"] = llm_langgraph.create_name_generator()
 if 'user_preference_reflected' not in st.session_state:
     st.session_state.user_preference_reflected = False # 기본값: 기존 선호도 미반영
 if 're_recommendation_allowed' not in st.session_state:
-    st.session_state.re_recommendation_allowed = False # 기본값: 재추천 하지 않음
+    st.session_state.re_recommendation_allowed = True # 기본값: 재추천 허용. No Load Preference를 하기 위해서.
 
 # AI, Human, System, Tool 모든 메시지 저장  
 if "messages" not in st.session_state:

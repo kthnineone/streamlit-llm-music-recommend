@@ -239,6 +239,20 @@ def display_llm_performance(agent_data=None):
 
 
 def display_llm_component_eval(agent_data=None):
+    st.title("📊 LLM 웹 서치와 정답 성능 평가")
+    st.markdown(
+    """
+    <style>
+    div[data-testid="stMetricValue"] {
+        font-size: 24px; /* 값(숫자)의 폰트 크기 */
+    }
+    div[data-testid="stMetricLabel"] > div {
+        font-size: 14px; /* 라벨(텍스트)의 폰트 크기 */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+    )
     if agent_data:
         evaluations = get_llm_evaluations(agent_data)
         # --- LLM 서비스 정보 표시 ---
