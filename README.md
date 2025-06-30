@@ -4,7 +4,7 @@
 
 실제 채팅 화면  
 
-![채팅 화면 움직이는 이미지](https://github.com/user-attachments/assets/5848ccdf-f275-4b81-927f-55bfa2437c45 "Main Chat gif")
+![채팅 화면 움직이는 이미지](https://github.com/kthnineone/streamlit-llm-music-recommend/blob/main/demo/llm_agent_music_rec_250612.gif "Main Chat gif")
 
 <br>
 
