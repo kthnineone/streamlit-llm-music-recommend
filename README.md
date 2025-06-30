@@ -10,6 +10,13 @@
 
 ![채팅 화면 이미지](https://github.com/kthnineone/streamlit-llm-music-recommend/blob/main/demo/llm_based_music_recommender_main_3.PNG "Main Chat 3")
 
+
+**Details**  
+
+블로그에 채팅 이미지, 영상, 대시보드 샘플 업로드  
+[🔗 링크](https://arsetstudium.tistory.com/382)
+
+
 ## Description  
 
 + Streamlit으로 ChatBot 구현  
