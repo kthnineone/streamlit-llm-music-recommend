@@ -4,10 +4,11 @@
 
 실제 채팅 화면  
 
-<iframe width="560" height="315" src="https://tv.kakao.com/v/456118644" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+![채팅 화면 움직이는 이미지](https://github.com/user-attachments/assets/8f7c356e-8817-4063-b2fb-bdcc2bc9f27f "Main Chat gif")
 
+<br>
 
-![채팅 화면](https://github.com/kthnineone/streamlit-llm-music-recommend/blob/main/demo/llm_based_music_recommender_main_3.PNG "Main Chat 3")
+![채팅 화면 이미지](https://github.com/kthnineone/streamlit-llm-music-recommend/blob/main/demo/llm_based_music_recommender_main_3.PNG "Main Chat 3")
 
 ## Description  
 
