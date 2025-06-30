@@ -4,7 +4,7 @@
 
 실제 채팅 화면  
 
-![채팅 화면 움직이는 이미지](https://github.com/user-attachments/assets/8f7c356e-8817-4063-b2fb-bdcc2bc9f27f "Main Chat gif")
+![채팅 화면 움직이는 이미지](https://github.com/user-attachments/assets/5848ccdf-f275-4b81-927f-55bfa2437c45 "Main Chat gif")
 
 <br>
 
