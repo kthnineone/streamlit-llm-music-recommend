@@ -33,14 +33,15 @@ st.set_page_config(page_title="음악 추천 대시보드", page_icon="📊")
 
 collection_raw = mongodb_client.raw_messages_collection
 
-documents = list(collection_raw.find())
+#documents = list(collection_raw.find())
+documents = list(collection_raw.find({"redis_key": 'user:10'}))
 
 agent_data = documents[0]
 
 st.sidebar.title("대시보드 선택")
 page = st.sidebar.radio(
     "확인할 대시보드를 선택하세요:",
-    ["LLM 성능 평가", "제약 조건 준수 평가", "LLM 구성요소 평가"]
+    ["LLM 성능 평가", "제약 조건 준수 평가", "LLM 구성요소 평가", "LangSmith"]
 )
 
 
@@ -50,4 +51,6 @@ elif page == "제약 조건 준수 평가":
     display_constraints_eval_result(agent_data)
 elif page == "LLM 구성요소 평가":
     display_llm_component_eval(agent_data)
+elif page == "LangSmith":
+    disply_langsmith()
 

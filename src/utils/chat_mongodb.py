@@ -116,8 +116,10 @@ class MongoDBClient():
             # 기존 채팅이 있을 경우
             if existing_chat:
                 print(f"Chat with redis_key '{redis_key}' already exists.")
+                """start_time, end_time, latency는 싱글턴 대화에서의 내역
+                멀티턴 대화의 경우 start_time, end_time, latency를 리스트로 저장"""
+                print("Messages have changed. Updating 'messages', 'num_chat_turn', 'conversation_start_time', 'conversation_end_time', 'conversation_latency', and 'updated_at' fields.")
 
-                print("Messages have changed. Updating 'messages', 'num_chat_turn', and 'updated_at' fields.")
                 updated_messages = chat_data.get('messages', []) # 'messages'가 없으면 빈 리스트 
                 if is_for_user: # messages_for_user 컬렉션의 경우 
                     if updated_messages:
@@ -130,9 +132,17 @@ class MongoDBClient():
                     else:
                         updated_messages = existing_chat['messages']
                 updated_num_chat_turn = chat_data.get('num_chat_turn', existing_chat['num_chat_turn'])
+
+                updated_start_time = existing_chat['conversation_start_time'] + chat_data.get('conversation_start_time', [])
+                updated_end_time = existing_chat['conversation_end_time'] + chat_data.get('conversation_end_time', [])
+                updated_latency = existing_chat['conversation_latency'] + chat_data.get('conversation_latency', [])
+
                 update_fields = {
                     "messages": updated_messages,
                     "num_chat_turn": updated_num_chat_turn,
+                    'conversation_start_time': updated_start_time,
+                    'conversation_end_time': updated_end_time,
+                    'conversation_latency': updated_latency,
                     "updated_at": time.time() #datetime.now()
                 }
                 result = collection.update_one(
