@@ -16,6 +16,17 @@
 블로그에 채팅 이미지, 영상, 대시보드 샘플 업로드 [(🔗 링크)](https://arsetstudium.tistory.com/382)  
 
 
+**LangGraph Visualization**  
+
+LangGraph 전체  
+
+![전체 LangGraph 이미지](https://github.com/kthnineone/streamlit-llm-music-recommend/blob/main/demo/음악추천챗봇_LangGraph.png "LangGraph - Total")  
+
+Web Search Agent  
+
+![Web Search Agent LangGraph 이미지](https://github.com/kthnineone/streamlit-llm-music-recommend/blob/main/demo/음악추천챗봇_WebSearchAgent.png "LangGraph - Web Search Agent")  
+
+
 ## Description  
 
 + Streamlit으로 ChatBot 구현  
