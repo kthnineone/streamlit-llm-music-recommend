@@ -2,8 +2,11 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 import json
-from datetime import datetime
+import os
+from dotenv import load_dotenv
+from datetime import datetime, timedelta
 import pandas as pd
+from langsmith import Client
 from .evaluate import *
 from .evaluate_llm import *
 
@@ -137,7 +140,10 @@ def display_llm_performance(agent_data=None):
     unsafe_allow_html=True
     )
     if agent_data and 'messages' in agent_data:
-        df_metrics = extract_llm_metrics(agent_data)
+        #df_metrics = extract_llm_metrics(agent_data)
+        df_metrics = extract_single_chat_metrics(agent_data)
+        print(f'\n---- df_metrics load complete ----\n')
+        print(df_metrics)
 
         if not df_metrics.empty:
             st.header("1. 주요 성능 요약")
@@ -178,27 +184,30 @@ def display_llm_performance(agent_data=None):
 
             st.header("3. 응답 속도 (레이턴시) 분석")
             st.markdown("---")
-            st.warning("⚠️ **주의:** 현재 레이턴시 값은 메시지 턴의 순서를 나타내는 프록시 값이며, 실제 API 응답 시간이 아닙니다. 정확한 레이턴시 측정을 위해서는 LLM 호출 시점과 응답 완료 시점의 타임스탬프를 기록해야 합니다.")
+            st.warning("⚠️ **주의:** 현재 레이턴시 값은 추가 분석이 필요합니다.")
             
-            st.subheader("LLM 호출 순서별 레이턴시 (프록시)")
+            # 'latency_proxy'라는 목업 데이터
+            st.subheader("LLM 호출 순서별 레이턴시 (초)")
             fig_latency = px.line(
                 df_metrics,
                 x='message_id',
-                y='latency_proxy',
-                title='LLM 호출 순서별 레이턴시 (프록시)',
-                labels={'message_id': '메시지 ID', 'latency_proxy': '레이턴시 (순서)'},
+                y='latency', 
+                title='LLM 호출 순서별 레이턴시',
+                labels={'message_id': '메시지 ID', 'latency': '레이턴시 (초)'},
                 hover_data=['agent_name', 'model_name', 'total_tokens']
             )
             st.plotly_chart(fig_latency, use_container_width=True)
 
-            st.subheader("에이전트별 평균 레이턴시 (프록시)")
-            avg_latency_by_agent = df_metrics.groupby('agent_name')['latency_proxy'].mean().reset_index()
+            st.subheader("에이전트별 평균 레이턴시 (초)")
+            print(f'df_metrics:\n{df_metrics[['agent_name', 'latency']]}')
+            avg_latency_by_agent = df_metrics.groupby('agent_name')['latency'].mean().reset_index()
+            print(f'avg_latency_by_agent:\n{avg_latency_by_agent}')
             fig_avg_latency = px.bar(
                 avg_latency_by_agent,
                 x='agent_name',
-                y='latency_proxy',
+                y='latency',
                 title='에이전트별 평균 레이턴시 (프록시)',
-                labels={'latency_proxy': '평균 레이턴시 (순서)', 'agent_name': '에이전트'}
+                labels={'latency': '평균 레이턴시 (초)', 'agent_name': '에이전트'}
             )
             st.plotly_chart(fig_avg_latency, use_container_width=True)
 
@@ -223,9 +232,17 @@ def display_llm_performance(agent_data=None):
 
             st.header("5. 원본 에이전트 데이터 (LLM 응답 부분)")
             # 모든 AI 메시지의 원본 데이터를 보여줌
-            llm_responses = [
-                msg for msg in agent_data.get('messages', []) if msg.get('type') == 'ai'
-            ]
+            def get_llm_responses(raw_data):
+                llm_responses = []
+                for msg_idx, messages in enumerate(raw_data.get('messages', [])):
+                    for message in messages.get('messages', []):
+                        message = message.get('kwargs', {})
+                        if message.get('type') == 'ai':
+                            llm_responses.append(message)
+                return llm_responses
+
+            llm_responses = get_llm_responses(agent_data)
+
             if llm_responses:
                 st.json(llm_responses)
             else:
@@ -338,3 +355,112 @@ def display_llm_component_eval(agent_data=None):
         st.caption("데이터는 예시이며, 실제 LLM 평가 시스템에 따라 데이터를 연동해야 합니다.")
 
 
+def disply_langsmith():
+    #st.set_page_config(layout="wide")
+
+    # LangSmith 클라이언트 초기화
+    # 환경 변수를 통해 API 키를 로드합니다.
+    # LANGCHAIN_API_KEY 환경 변수가 설정되어 있어야 합니다.
+    load_dotenv()
+    os.environ["LANGCHAIN_TRACING_V2"] = "true" # Tracing V2 활성화
+
+    try:
+        client = Client()
+    except Exception as e:
+        st.error(f"LangSmith 클라이언트 초기화 실패: {e}")
+        st.info("LANGCHAIN_API_KEY 환경 변수가 올바르게 설정되었는지 확인해주세요.")
+        st.stop()
+
+    st.title("🚀 LangSmith 모니터링 대시보드")
+
+    st.sidebar.header("필터 설정")
+
+    # 기간 필터
+    time_range_options = {
+        "지난 1시간": timedelta(hours=1),
+        "지난 6시간": timedelta(hours=6),
+        "지난 24시간": timedelta(hours=24),
+        "지난 7일": timedelta(days=7),
+        "모두": None
+    }
+    selected_time_range_label = st.sidebar.selectbox("기간 선택", list(time_range_options.keys()))
+    selected_timedelta = time_range_options[selected_time_range_label]
+
+    # 프로젝트 이름 필터 (선택 사항)
+    project_name = st.sidebar.text_input("프로젝트 이름 (선택 사항)", value="")
+
+    # Trace 데이터 가져오기
+    @st.cache_data(ttl=600) # 10분마다 캐시 갱신
+    def get_langsmith_traces(project_name=None, selected_timedelta=None):
+        runs_data = []
+        
+        # 시간 필터 적용
+        if selected_timedelta:
+            start_time = datetime.now() - selected_timedelta
+        else:
+            start_time = None # 모든 기간
+            
+        try:
+            # runs.list()를 사용하여 Run 객체들을 가져옵니다.
+            # 이터레이터이므로 반복하여 모든 Run을 가져와야 합니다.
+            for run in client.list_runs(project_name=project_name, start_time=start_time):
+                runs_data.append({
+                    "id": run.id,
+                    "name": run.name,
+                    "run_type": run.run_type,
+                    "start_time": run.start_time,
+                    "end_time": run.end_time,
+                    "status": run.status,
+                    "feedback_score": run.feedback_score,
+                    "error": run.error,
+                    "latency_ms": (run.end_time - run.start_time).total_seconds() * 1000 if run.start_time and run.end_time else None
+                })
+            return pd.DataFrame(runs_data)
+        except Exception as e:
+            st.error(f"LangSmith 데이터 로드 실패: {e}")
+            return pd.DataFrame()
+
+    df = get_langsmith_traces(project_name=project_name if project_name else None, selected_timedelta=selected_timedelta)
+
+    if not df.empty:
+        st.subheader("📊 전체 모니터링 개요")
+
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("총 실행 수", len(df))
+        with col2:
+            successful_runs = df[df['status'] == 'completed']
+            st.metric("성공한 실행", len(successful_runs))
+        with col3:
+            failed_runs = df[df['status'] == 'failed']
+            st.metric("실패한 실행", len(failed_runs))
+        with col4:
+            avg_latency = df['latency_ms'].mean()
+            st.metric("평균 지연 시간 (ms)", f"{avg_latency:.2f}" if pd.notna(avg_latency) else "N/A")
+
+        st.subheader("테이블 형식 데이터")
+        st.dataframe(df.sort_values(by="start_time", ascending=False), use_container_width=True)
+
+        st.subheader("📈 실행 타입별 분포")
+        run_type_counts = df['run_type'].value_counts()
+        st.bar_chart(run_type_counts)
+
+        st.subheader("🚨 실패한 실행 목록")
+        if not failed_runs.empty:
+            st.dataframe(failed_runs[['name', 'run_type', 'start_time', 'error']], use_container_width=True)
+        else:
+            st.info("실패한 실행이 없습니다.")
+
+        st.subheader("⏳ 시간 경과에 따른 지연 시간 (상위 20개)")
+        # 실행 시간이 있는 경우에만 필터링
+        df_with_latency = df.dropna(subset=['latency_ms'])
+        if not df_with_latency.empty:
+            # 상위 20개 실행만 시각화 (너무 많으면 차트가 복잡해짐)
+            top_20_latency = df_with_latency.sort_values(by="latency_ms", ascending=False).head(20)
+            st.bar_chart(top_20_latency.set_index('name')['latency_ms'])
+        else:
+            st.info("지연 시간을 측정할 수 있는 데이터가 없습니다.")
+
+    else:
+        st.warning("데이터를 가져오지 못했거나 필터 조건에 맞는 데이터가 없습니다.")
+        st.info("LangSmith에 프로젝트가 존재하고 실행 내역이 있는지 확인해주세요.")

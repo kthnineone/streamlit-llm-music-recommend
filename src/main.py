@@ -1,6 +1,7 @@
 import os
 import json
 import time
+from pprint import pprint
 import streamlit as st
 from controllers.display_chat_list import *
 import services.llm_langgraph as llm_langgraph
@@ -344,8 +345,9 @@ def display_main_chat_simple_chatbot():
             for output in st.session_state["graph"].stream({"messages": chat_history},
                                                                        config=config):
                 print(f'\noutput type: {type(output)}')
-                output['num_chat_turn'] = st.session_state['current_num_chat_turn']
+                print(f'\noutput len:\n {len(output)}')
                 print(f'\noutput:\n {output}')
+                output['num_chat_turn'] = st.session_state['current_num_chat_turn']
                 # 로그에 출력 내용 기록
                 log_structured_data(logger, output, model_name=st.session_state["model"])
                 if "chatbot" in output: # output.keys()는 모든 키를 포함하는 뷰 객체를 만들기에 오버헤드 발생 
@@ -427,6 +429,35 @@ def display_main_chat_simple_chatbot():
         mongodb_client.insert_update_messages_for_user(messages_for_user_json)
 
 
+class MessageMemorizer:
+    def __init__(self):
+        self.num_previous_messages=0
+        self.previous_messages_list = []
+
+    def convert_to_output_to_save(self, messages_list, time_metadata):
+        print(f'\nconvert to save into output_to_save')
+        #pprint(f'messages: {messages_list}')
+        print(f'total num of messages: {len(messages_list)}')
+        print(f'num of previous messages: {self.num_previous_messages}')
+        result = []
+        num_new_messages = 0
+        # 추가되는 메시지만 추가로 저장 
+        for message in messages_list[self.num_previous_messages:]:
+            #pprint(f'message: {message}')
+            pprint(f'message to_json: {message.to_json()}')
+            self.previous_messages_list.append(message.to_json())
+            result.append(message.to_json())
+            num_new_messages += 1
+        # 현재까지 추가된 메시지까지 카운팅한 전체 메시지의 개수 
+        accum_num_messages = self.num_previous_messages + num_new_messages
+        # 'start_own_message'와 'end_own_message'로 새로 추가된 메시지의 위치 확인 가능 
+        result = {'messages': result,
+                'time_metadata': time_metadata,
+                'start_own_message': self.num_previous_messages,
+                'end_own_message': accum_num_messages} 
+        
+        self.num_previous_messages = accum_num_messages
+        return result
 
 
 
@@ -463,6 +494,9 @@ def display_main_chat():
     log_structured_data(logger, init_log, model_name=st.session_state["model"])
     full_response = ""
 
+    # message memorizer
+    message_memorize = MessageMemorizer()
+
     if user_input := st.chat_input():
         print(f'If user_input, Current Models Config: {st.session_state['current_models_config']}')
         # chat_history에 추가 
@@ -495,24 +529,54 @@ def display_main_chat():
         num_previous_chat_history = len(chat_history) - 1
         # modified user_input으로 변경 
         chat_history[-1] = {"role": 'user', "content": user_input}
+        #output_to_save = [{'human': {'content': user_input, 'type': 'human'}}]
+        output_to_save = []
+        time_metadata_list = []
         
         # AI assistant 응답 생성 섹션 
         with st.chat_message("assistant"):
+            start_time = time.time() # Same as LangSmith
             chat_container = st.empty()
             status_container = st.empty()  # 상태 메시지를 표시할 컨테이너
 
             # LangGraph 실행 
             status_container.markdown('결과를 생성중...')
+
+            step_start_time = time.time() # 스트림 시작 시간 기록
+            step_count = 0
             for output in st.session_state["graph"].stream({"messages": chat_history},
-                                                                       config=config):
+                                                                       config=config,
+                                                                       subgraphs=True
+                                                                       ):
+                #current_time = time.time() # 현재 스텝의 종료 시간 기록
                 print(f'\noutput type: {type(output)}')
+                print(f'\noutput len:\n {len(output)}')
+                pprint(f'\noutput:')
+                for partial_output in output:
+                    print(partial_output, '\n')
                 output['num_chat_turn'] = st.session_state['current_num_chat_turn']
-                print(f'\noutput:\n {output}')
+                # Time metadata
+                step_end_time = time.time()
+                elapsed_time = step_end_time - step_start_time # 이전 스텝부터 현재 스텝까지의 경과 시간
+                time_metadata = {'start_time': step_start_time,
+                                 'end_time': step_end_time,
+                                 'latency': elapsed_time}
+                step_count += 1
+                time_metadata_list.append(time_metadata)
+                step_start_time = step_end_time # 다음 스텝을 위해 현재 시간을 이전 스텝 시간으로 업데이트
+                print(f'\ntime metadata to save:\n{time_metadata}')
+                pprint(f'\noutput:\n {output}')
                 # 로그에 출력 내용 기록
                 log_structured_data(logger, output, model_name=st.session_state["model"])
                 # supervisor_agent case 
                 if "supervisor_agent" in output:
+                    current_agent = "supervisor_agent"
+                    output_body = output["supervisor_agent"]
                     messages = output["supervisor_agent"]["messages"]
+                    # Add time metadata
+                    message_to_save = message_memorize.convert_to_output_to_save(messages, time_metadata)
+                    output_to_save.append(message_to_save)
+                    print('output_to_save step')
                     if messages:
                         last_message = messages[-1]
                         # 메시지 로그에 추가
@@ -552,20 +616,41 @@ def display_main_chat():
                             continue # 다음 스트림 출력으로 넘어감
                 # Agent 상태 메시지 처리 
                 elif "web_search_agent" in output:
-                    print(f'\n----- output of web_search_agent -----:\n{output["web_search_agent"]['messages']}')
+                    current_agent = "web_search_agent"
+                    # Add time metadata
+                    output[current_agent]['time_metadata'] = time_metadata
+                    output_body = output["web_search_agent"]
+                    print(f'\n----- output of web_search_agent -----:\n{output_body['messages']}')
                     status_container.markdown('웹 검색 중...')
                     # 메시지 로그에 추가 
-                    content = output["web_search_agent"]["messages"][-1].content
+                    output_body = output["web_search_agent"]
+                    messages = output_body["messages"]
+                    last_message = messages[-1]
+                    content = last_message.content
                     add_to_messages_log("web_search_agent", content)
+                    # Add time metadata
+                    message_to_save = message_memorize.convert_to_output_to_save(messages, time_metadata)
+                    output_to_save.append(message_to_save)
                     # Gemini 모델의 경우 web_search_agent의 메시지를 full_response에 추가해야 함 
                     if 'gemini' in st.session_state["model"].lower():
                         full_response += '\n' + content
                     continue
                 elif "load_preference_agent" in output:
-                    print(f'\n-----output of load_preference_agent -----:\n {output["load_preference_agent"]['messages']}')
+                    current_agent = "load_preference_agent"
+                    # Add time metadata
+                    output[current_agent]['time_metadata'] = time_metadata
+                    print(f'\n{current_agent}, time metadata:\n{time_metadata}')
+                    output_body = output["load_preference_agent"]
+                    print(f'\n-----output of load_preference_agent -----:\n {output_body['messages']}')
                     status_container.markdown('기존 유저의 선호 음악 정보 불러오는 중...')
                     # 메시지 로그에 추가 
-                    content = output["load_preference_agent"]["messages"][-1].content
+                    messages = output_body["messages"]
+                    last_message = messages[-1]
+                    content = last_message.content
+                    add_to_messages_log("web_search_agent", content)
+                    # Add time metadata
+                    message_to_save = message_memorize.convert_to_output_to_save(messages, time_metadata)
+                    output_to_save.append(message_to_save)
                     add_to_messages_log("load_preference_agent", content)
                     continue
                 elif "END" in output:
@@ -573,6 +658,7 @@ def display_main_chat():
                     #st.session_state["graph"].reset()  # 그래프 상태 초기화
                     break
 
+            # stream for loop 종료 
             # 상태 메시지 제거
             status_container.empty()
 
@@ -586,6 +672,8 @@ def display_main_chat():
             elif full_response:
                  chat_container.markdown(full_response)
             #st.session_state.messages.append({"role": "assistant", "content": full_response})
+        end_time = time.time() # Same as LangSmith
+        latency = end_time - start_time
 
         # chat_history에 추가
         add_to_current_chat("assistant", full_response)
@@ -596,7 +684,10 @@ def display_main_chat():
         save_messages_log(messages_to_save=st.session_state['messages'])
         # Output를 딕셔너리 화  
         output_dict = dict(output)
+        pprint(f'output dict: {output_dict}')
+        pprint(f'\noutput to save: {output_to_save}')
         # 채팅 이름 생성 
+        print(f'\nChat name generating process ----')
         if 'chat_name' in st.session_state:
             if st.session_state["chat_name"] != '':
                 chat_name = st.session_state["chat_name"]
@@ -612,34 +703,46 @@ def display_main_chat():
             st.session_state["chat_name"] = chat_name
         # Tool을 포함한 전체 메시지, 모니터링용
         # 이전의 chat_history 파트 제거를 위해서 num_previous_chat_history 추가
-        raw_messages_json = convert_to_json_for_raw(USER_ID,
+        print(f'\nnum_previous_chat_history: {num_previous_chat_history}')
+        # output_to_save로 교체 
+        print(f'\nData Processing to Save into DB ----')
+        print(f'Raw Messages')
+        raw_messages_json = convert_to_json_for_raw_messages(USER_ID,
                                                 USER_NAME,
                                                 thread_id,
                                                 chat_name,
                                                 st.session_state['current_num_chat_turn'],
                                                 st.session_state['user_preference_reflected'],
                                                 st.session_state['re_recommendation_allowed'],
-                                                output_dict,
+                                                output_to_save,
                                                 num_previous_chat_history)
         # metadata 추가 
+        raw_messages_json.update({'conversation_start_time': [start_time], 
+                                  'conversation_end_time': [end_time], 
+                                  'conversation_latency': [latency],
+                                  'step_count': step_count})
         raw_messages_json.update(st.session_state['current_models_config'])
         print(f'In the Saving Process, Current Models Config: {st.session_state['current_models_config']}')
         redis_key = f'{USER_ID}:{thread_id}'
         # Redis에 저장 
-        redis_client.save_into_redis(raw_messages_json, redis_key)
+        #redis_client.save_into_redis(raw_messages_json, redis_key)
         raw_messages_json['redis_key'] = redis_key
         # MongoDB에 저장 
-        mongodb_client.insert_update_raw_messages(raw_messages_json)
+        #mongodb_client.insert_update_raw_messages(raw_messages_json)
         # 유저에게 보여주기 위한 대화 내역 
+        print(f'\nMessages for User')
         messages_for_user_json = {'user_id': USER_ID,
                                 'user_name': USER_NAME,
                                 'thread_id': thread_id,
                                 'num_chat_turn': st.session_state['current_num_chat_turn'],
                                 'chat_name': chat_name,
                                 'redis_key': redis_key,
-                                'messages': st.session_state['current_chat_history']}
+                                'messages': st.session_state['current_chat_history'],
+                                'conversation_start_time': [start_time], 
+                                'conversation_end_time': [end_time], 
+                                'conversation_latency': [latency]}
         # MongoDB에 저장 
-        mongodb_client.insert_update_messages_for_user(messages_for_user_json)
+        #mongodb_client.insert_update_messages_for_user(messages_for_user_json)
 
 
 

@@ -85,6 +85,54 @@ def convert_to_json_for_raw(USER_ID,
                 'messages': json_shaped_data}    
     return json_data   
 
+
+
+def extract_current_query(raw_data):
+    # 맨 첫번째 메시지 묶음의 마지막만 리턴
+    messages_cluster = raw_data[0]
+    print(f'---- extract latest query process')
+    print(f'messages:\n{messages_cluster}')
+    messages_cluster['messages'] = messages_cluster['messages'][-1]
+    print(f'modified messages:\n{messages_cluster}')
+    return [messages_cluster]
+
+
+def convert_to_json_for_raw_messages(USER_ID,
+                          USER_NAME,
+                          thread_id,
+                          chat_name,
+                          num_chat_turn,
+                          user_preference_reflected,
+                          re_recommendation_allowed,
+                          raw_data,
+                          num_previous_chat_history=0):
+    # content (message) and corresponding metadata in json
+    print(f'\noutput_to_save -----\n raw_data: type: {type(raw_data)}, length: {len(raw_data)}')
+    print(raw_data)
+    #json_shaped_data = raw_data.to_json()['kwargs']
+    #raw_data = raw_data['supervisor_agent']['messages']
+    #json_shaped_data = raw_data[num_previous_chat_history:]
+    #json_shaped_data = raw_data[num_chat_turn-1:]
+    #lastest_query = extract_current_query(raw_data)
+    #json_shaped_data = raw_data[1:] + lastest_query
+    json_shaped_data = raw_data
+    #print(f'\nlen of json_shaped_data: {len(json_shaped_data)}\n')
+    #print(f'\njson_shaped_data:\n{json_shaped_data}')
+    # Add is_final_response to the last message
+    json_shaped_data[-1]['is_final_response'] = True
+
+    json_data = {'user_id': USER_ID,
+                'user_name': USER_NAME,
+                'thread_id': thread_id,
+                'chat_name': chat_name,
+                'num_chat_turn': num_chat_turn,
+                'user_preference_reflected': user_preference_reflected,
+                're_recommendation_allowed': re_recommendation_allowed,
+                'messages': json_shaped_data}    
+    return json_data   
+
+
+
 ### Models Config ###
 
 def load_models_config(filepath="config/current_models.yaml"):

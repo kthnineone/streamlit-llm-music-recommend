@@ -1,0 +1,723 @@
+{
+  "session_info": {
+    "session_id": "1752820477",
+    "total_executions": 25,
+    "export_time": 1752820477.6457055
+  },
+  "metrics": [
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.139990825,
+      "end_time": 9505.141553375,
+      "latency": 0.0015625500000169268,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 2,
+      "output_message_count": 3,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 1,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.143005105,
+      "end_time": 9505.143873771,
+      "latency": 0.0008686660003149882,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 3,
+      "output_message_count": 4,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 2,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.145721922,
+      "end_time": 9505.146473046,
+      "latency": 0.0007511240000894759,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 4,
+      "output_message_count": 5,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 3,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.147922304,
+      "end_time": 9505.148855524,
+      "latency": 0.0009332199988421053,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 5,
+      "output_message_count": 6,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 4,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.150961299,
+      "end_time": 9505.151791707,
+      "latency": 0.0008304080001835246,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 6,
+      "output_message_count": 7,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 5,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.153887695,
+      "end_time": 9505.154985711,
+      "latency": 0.0010980160004692152,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 7,
+      "output_message_count": 8,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 6,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.157463786,
+      "end_time": 9505.158201662,
+      "latency": 0.0007378760001301998,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 8,
+      "output_message_count": 9,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 7,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.160015312,
+      "end_time": 9505.160801036,
+      "latency": 0.000785723999797483,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 9,
+      "output_message_count": 10,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 8,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.162469265,
+      "end_time": 9505.163457747,
+      "latency": 0.000988481999229407,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 10,
+      "output_message_count": 11,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 9,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.165153755,
+      "end_time": 9505.166326904,
+      "latency": 0.0011731489994417643,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 11,
+      "output_message_count": 12,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 10,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.168491697,
+      "end_time": 9505.169686001,
+      "latency": 0.0011943039990001125,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 12,
+      "output_message_count": 13,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 11,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.171146727,
+      "end_time": 9505.171979013,
+      "latency": 0.0008322859994223109,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 13,
+      "output_message_count": 14,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 12,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.173939764,
+      "end_time": 9505.174920435,
+      "latency": 0.0009806710004340857,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 14,
+      "output_message_count": 15,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 13,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.176949793,
+      "end_time": 9505.178020129,
+      "latency": 0.0010703360003390117,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 15,
+      "output_message_count": 16,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 14,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.179856912,
+      "end_time": 9505.180808717,
+      "latency": 0.0009518049992038868,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 16,
+      "output_message_count": 17,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 15,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.182441061,
+      "end_time": 9505.183130793,
+      "latency": 0.0006897319999552565,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 17,
+      "output_message_count": 18,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 16,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.184699572,
+      "end_time": 9505.185404429,
+      "latency": 0.0007048569987091469,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 18,
+      "output_message_count": 19,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 17,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.187342442,
+      "end_time": 9505.188293457,
+      "latency": 0.0009510150011919905,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 19,
+      "output_message_count": 20,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 18,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.189911367,
+      "end_time": 9505.1905318,
+      "latency": 0.0006204330002219649,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 20,
+      "output_message_count": 21,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 19,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.192087925,
+      "end_time": 9505.193078878,
+      "latency": 0.0009909529999276856,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 21,
+      "output_message_count": 22,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 20,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.194400511,
+      "end_time": 9505.195228151,
+      "latency": 0.0008276400003524031,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 22,
+      "output_message_count": 23,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 21,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.197013131,
+      "end_time": 9505.198353844,
+      "latency": 0.0013407129990810063,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 23,
+      "output_message_count": 24,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 22,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.200644681,
+      "end_time": 9505.201313654,
+      "latency": 0.0006689730016660178,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 24,
+      "output_message_count": 25,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 23,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.203092802,
+      "end_time": 9505.204033634,
+      "latency": 0.0009408320001966786,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 25,
+      "output_message_count": 26,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 24,
+      "metadata": {
+        "message_delta": 1,
+        "has_tool_calls": false,
+        "is_handoff": false
+      }
+    },
+    {
+      "node_name": "supervisor_agent",
+      "agent_type": "AgentType.SUPERVISOR",
+      "start_time": 9505.205872097,
+      "end_time": 9505.20659465,
+      "latency": 0.0007225530007417547,
+      "success": true,
+      "error_message": null,
+      "input_message_count": 0,
+      "output_message_count": 0,
+      "tool_calls": [],
+      "handoff_target": null,
+      "execution_order": 25,
+      "metadata": {}
+    }
+  ],
+  "summary": {
+    "session_id": "1752820477",
+    "total_nodes": 25,
+    "successful_nodes": 25,
+    "failed_nodes": 0,
+    "total_latency": 0.0232,
+    "average_latency": 0.0009,
+    "agent_statistics": {
+      "supervisor_agent": {
+        "execution_count": 25,
+        "total_latency": 0.0232,
+        "avg_latency": 0.0009,
+        "success_rate": 100.0
+      }
+    },
+    "execution_flow": [
+      {
+        "order": 1,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0016,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 2,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0009,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 3,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0008,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 4,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0009,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 5,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0008,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 6,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0011,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 7,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0007,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 8,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0008,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 9,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.001,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 10,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0012,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 11,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0012,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 12,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0008,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 13,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.001,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 14,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0011,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 15,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.001,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 16,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0007,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 17,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0007,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 18,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.001,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 19,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0006,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 20,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.001,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 21,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0008,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 22,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0013,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 23,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0007,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 24,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0009,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      },
+      {
+        "order": 25,
+        "node": "supervisor_agent",
+        "agent_type": "supervisor_agent",
+        "latency": 0.0007,
+        "success": true,
+        "tool_calls": [],
+        "handoff_target": null
+      }
+    ]
+  }
+}
