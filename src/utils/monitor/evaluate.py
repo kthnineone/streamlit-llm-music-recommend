@@ -28,8 +28,13 @@ def evaluate_constraints(data):
     # "Do NOT allow re-recommendation of previously recommended songs."
     # 이 두 문구가 존재하는지 확인하여 이중 체크할 수 있습니다.
     initial_user_request = ""
-    if data and 'messages' in data and len(data['messages']) > 0 and data['messages'][0]['type'] == 'human':
-        initial_user_request = data['messages'][0]['content']
+    if data:
+        print(f'first messages: \n{data['messages'][0]}')
+        if 'messages' in data and len(data['messages']) > 0:
+            print(f'first message in first messages: \n{data['messages'][0]['messages'][0]}')
+            first_message = data['messages'][0]['messages'][0]
+            if first_message['kwargs']['type'] == 'human':
+                initial_user_request = first_message['kwargs']['content']
 
     # 'Do not incorporate the user\'s existing preferences.' 문구 포함 여부
     if "Do not incorporate the user's existing preferences." in initial_user_request:
@@ -46,22 +51,41 @@ def evaluate_constraints(data):
     # 최종 추천 메시지 분석 (RECOMMENDATION_COMPLETE가 있는지, 추천된 곡들이 있는지)
     final_recommendation_message = ""
     recommended_songs = []
+    print(f'\n---- find recommendation step ----')
     if data and 'messages' in data:
-        for message in data['messages']:
-            if message.get('type') == 'ai' and "RECOMMENDATION_COMPLETE" in message.get('content', ''):
-                final_recommendation_message = message['content']
-                # 추천 곡 목록 추출 (간단한 파싱)
-                song_list_start = final_recommendation_message.find("추천 곡 목록:")
-                if song_list_start != -1:
-                    song_list_content = final_recommendation_message[song_list_start:]
-                    lines = song_list_content.split('\n')
-                    for line in lines:
-                        if line.strip().startswith(('1.', '2.', '3.', '4.', '5.')): # 5곡 추천으로 가정
-                            recommended_songs.append(line.strip())
+        data_messages = data['messages']
+        for idx in range(len(data_messages) - 1, 0, -1):
+            curr_messages = data_messages[idx]
+            print(f'{idx} current messages:\n{curr_messages}\n')
+            if curr_messages.get('is_final_response', False) == True:
+                response_messages = data_messages[idx - 1].get('messages', [])
+                print(f'\nresponse_messages:\n{response_messages}')
+                final_recommendation_message = response_messages[-1]['kwargs'].get('content', '')
+                song_list_content = final_recommendation_message
+                lines = song_list_content.split('\n')
+                for line in lines:
+                    if line.strip().startswith(('1.', '2.', '3.', '4.', '5.')): # 5곡 추천으로 가정
+                        recommended_songs.append(line.strip())
                 break
-    
+        
+            for message in curr_messages['messages']:
+                print(f'current message:\n{message}')
+                if message['kwargs'].get('type') == 'ai':
+                    if "RECOMMENDATION_COMPLETE" in message['kwargs'].get('content', ''):
+                        final_recommendation_message = message['kwargs']['content']
+                        # 추천 곡 목록 추출 (간단한 파싱)
+                        song_list_start = final_recommendation_message.find("추천 곡 목록:")
+                        if song_list_start != -1:
+                            song_list_content = final_recommendation_message[song_list_start:]
+                            lines = song_list_content.split('\n')
+                            for line in lines:
+                                if line.strip().startswith(('1.', '2.', '3.', '4.', '5.')): # 5곡 추천으로 가정
+                                    recommended_songs.append(line.strip())
+                        break
+        
     results['최종 추천 완료 여부'] = bool(final_recommendation_message)
     results['추천된 곡 수'] = len(recommended_songs)
+    results['최종 추천 메시지'] = final_recommendation_message
     
     # 여기서 "이전에 추천하지 않았던 곡들 중에서"라는 문구를 실제 이전 추천 목록과 비교해야 하지만
     # 현재 제공된 데이터만으로는 이전 추천 목록 정보가 없으므로 텍스트 존재 유무로만 판단

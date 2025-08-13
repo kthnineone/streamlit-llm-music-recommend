@@ -2,12 +2,12 @@
 # And Search Tools 
 
 llm_models:
-  - supervisor_models: gpt-4.1-mini-2025-04-14, gpt-4.1-2025-04-14, o3-2025-04-16, o4-mini-2025-04-16
+  - supervisor_models: gpt-4.1-mini-2025-04-14, gpt-4.1-2025-04-14, gpt-5-2025-08-07, o3-2025-04-16, o4-mini-2025-04-16
     type: openai
     subagent_model: gpt-4.1-mini-2025-04-14   
-  - supervisor_models: gemini-2.0-flash, gemini-2.5-flash-preview-05-20, gemini-2.5-pro-preview-05-06
+  - supervisor_models: gemini-2.5-flash, gemini-2.5-pro
     type: google
-    subagent_model: gemini-2.0-flash
+    subagent_model: gemini-2.5-flash
   - supervisor_models: claude-3-5-haiku-20241022, claude-3-5-sonnet-20241022, claude-3-7-sonnet-20250219, claude-sonnet-4-20250514, claude-opus-4-20250514
     type: anthropic
     subagent_model: claude-3-5-haiku-20241022
