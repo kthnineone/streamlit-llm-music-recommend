@@ -9,6 +9,7 @@ import pandas as pd
 from langsmith import Client
 from .evaluate import *
 from .evaluate_llm import *
+import pymongo
 
 def display_constraints_eval_result(agent_data=None):
     #st.set_page_config(layout="wide")
@@ -103,6 +104,8 @@ def display_constraints_eval_result(agent_data=None):
         st.subheader("최종 추천 결과 분석")
         if constraint_results['최종 추천 완료 여부']:
             st.success(f"✅ 최종 추천이 완료되었습니다. 추천된 곡 수: {constraint_results['추천된 곡 수']}곡")
+            st.markdown("### 최종 추천 메시지")
+            st.write(f"{constraint_results['최종 추천 메시지']}")
             if constraint_results['추천 메시지: 이전 추천 방지 문구']:
                 st.info("ℹ️ 최종 추천 메시지에 '이전에 추천하지 않았던 곡들 중에서'라는 문구가 포함되어 있습니다.")
             else:
@@ -130,7 +133,7 @@ def display_llm_performance(agent_data=None):
     """
     <style>
     div[data-testid="stMetricValue"] {
-        font-size: 24px; /* 값(숫자)의 폰트 크기 */
+        font-size: 18px; /* 값(숫자)의 폰트 크기 */
     }
     div[data-testid="stMetricLabel"] > div {
         font-size: 14px; /* 라벨(텍스트)의 폰트 크기 */
@@ -181,6 +184,58 @@ def display_llm_performance(agent_data=None):
 
             st.subheader("개별 LLM 호출별 토큰 사용량")
             st.dataframe(df_metrics[['agent_name', 'model_name', 'prompt_tokens', 'completion_tokens', 'total_tokens']].sort_values(by='total_tokens', ascending=False))
+
+            st.subheader("LLM 호출 예상 비용")
+            def load_cost_data(agent_data):
+                redis_key = agent_data['redis_key']
+                print(f'In Loading Cost data, redis_key: {redis_key}')
+                MONGO_URI = 'mongodb://localhost:27017/'
+                MONGO_DB_NAME = 'llm_monitor_db'
+                MONGO_COLLECTION_NAME = 'llm_cost'
+                try:
+                    mongo_client = pymongo.MongoClient(MONGO_URI)
+                    mongo_db_monitor = mongo_client[MONGO_DB_NAME]
+                    mongo_collection_cost = mongo_db_monitor[MONGO_COLLECTION_NAME]
+                    print("MongoDB 서버에 성공적으로 연결되었습니다.")
+                except pymongo.errors.ConnectionFailure as e:
+                    print(f"MongoDB 서버 연결 실패: {e}")
+                    print("MongoDB 서버가 실행 중인지 확인해 주세요.")
+                    exit()
+                query = {'redis_key': redis_key}
+                cost_result = list(mongo_collection_cost.find(query))
+                return cost_result
+
+            cost_data = load_cost_data(agent_data)
+            if isinstance(cost_data, list):
+                cost_data = cost_data[0]
+            print(f'cost_data: {cost_data}')
+            col7, col8, col9 = st.columns(3)
+            with col7:
+                st.metric("LLM 서비스 타입", cost_data['llm_service_type'])
+            with col8:
+                st.metric("supervisor model", cost_data['supervisor_llm_model'])
+            with col9:
+                st.metric("subagent model", cost_data['subagent_llm_model'])
+            
+            col10, col11 = st.columns(2)
+            with col10:
+                st.metric("채팅 턴 수", cost_data['num_chat_turn'])
+            with col11:
+                st.metric("총 비용 (USD)", cost_data['total_cost']['total_cost'])
+            
+
+            def get_df_cost(cost_data):
+                df_data = {'web_search_agent': cost_data['web_search_agent'],
+                        'load_preference_agent': cost_data['load_preference_agent'],
+                        'supervisor_agent': cost_data['supervisor_agent'],
+                        'total_cost': cost_data['total_cost'],
+                        }
+
+                df_cost = pd.DataFrame(df_data)
+                return df_cost
+            
+            st.dataframe(get_df_cost(cost_data))
+
 
             st.header("3. 응답 속도 (레이턴시) 분석")
             st.markdown("---")
